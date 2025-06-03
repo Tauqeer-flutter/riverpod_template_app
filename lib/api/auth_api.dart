@@ -9,8 +9,10 @@ part 'auth_api.g.dart';
 
 @RestApi()
 abstract class AuthApi {
+  //factory method
   factory AuthApi(Dio dio, {String? baseUrl}) = _AuthApi;
 
-  @POST('/auth/login')
+  //abstract method
+  @POST('auth/login')
   Future<LoginResponse> login(@Body() LoginRequest request);
 }

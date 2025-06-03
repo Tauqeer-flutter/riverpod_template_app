@@ -21,5 +21,7 @@ abstract class BaseNotifier<T> extends StateNotifier<T> {
     }
   }
 
+
   void onReceivingError(String message);
+  
 }
