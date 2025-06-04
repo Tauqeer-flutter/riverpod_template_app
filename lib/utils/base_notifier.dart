@@ -9,7 +9,7 @@ abstract class BaseNotifier<T> extends StateNotifier<T> {
 
   Future<U?> performSafeAction<U>(AsyncValueGetter<U> callback) async {
     try {
-      return await callback.call();
+      return await callback();
     } on AuthException catch (e, s) {
       log(e.message, stackTrace: s);
       onReceivingError(e.message);
@@ -23,5 +23,5 @@ abstract class BaseNotifier<T> extends StateNotifier<T> {
 
 
   void onReceivingError(String message);
-  
+
 }

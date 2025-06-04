@@ -18,20 +18,20 @@ class AuthNotifier extends BaseNotifier<AuthState> {
       state = LoadingAuthState();
       final String email = emailController.text.trim();
       final String password = passwordController.text.trim();
-      
+
       if (email.isEmpty || password.isEmpty) {
         throw Exception('Email and password cannot be empty');
       }
-      
+
       final LoginResponse response = await locator<AuthRepository>().login(
-        email: email, 
-        password: password
+        email: email,
+        password: password,
       );
-      
-      if (response.isSuccess == true) {
+
+      if (response.status == true) {
         // Save token to secure storage
         if (response.data != null) {
-          await locator<SecureStorage>().saveAuthToken(response.data!);
+          await locator<SecureStorage>().saveAuthToken(response.data.token);
         }
         state = SuccessAuthState();
       } else {

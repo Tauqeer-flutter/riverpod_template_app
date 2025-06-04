@@ -20,3 +20,5 @@ class RiverpodTemplate extends StatelessWidget {
     );
   }
 }
+
+

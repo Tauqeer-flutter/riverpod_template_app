@@ -1,37 +1,29 @@
-// import 'package:json_annotation/json_annotation.dart';
+// To parse this JSON data, do
+//
+//     final loginRequest = loginRequestFromJson(jsonString);
 
-// import '../../base_request.dart';
+import 'dart:convert';
 
-// part 'login_request.g.dart';
+LoginRequest loginRequestFromJson(String str) => LoginRequest.fromJson(json.decode(str));
 
-// @JsonSerializable()
-// class LoginRequest extends BaseRequest {
-//   final String email;
-//   final String password;
+String loginRequestToJson(LoginRequest data) => json.encode(data.toJson());
 
-//   LoginRequest({required this.email, required this.password});
+class LoginRequest {
+    String email;
+    String password;
 
-//   @override
-//   Map<String, dynamic> toJson() {
-//     return _$LoginRequestToJson(this);
-//   }
-// }
+    LoginRequest({
+        required this.email,
+        required this.password,
+    });
 
-import 'package:json_annotation/json_annotation.dart';
-import 'package:riverpod_template/models/base_request.dart';
-part 'login_request.g.dart';
+    factory LoginRequest.fromJson(Map<String, dynamic> json) => LoginRequest(
+        email: json["email"],
+        password: json["password"],
+    );
 
-@JsonSerializable()
-class LoginRequest extends BaseRequest {
-  final String email;
-  final String password;
-
-  LoginRequest({required this.email, required this.password});
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$LoginRequestToJson(this);
-  }
-  
-  
+    Map<String, dynamic> toJson() => {
+        "email": email,
+        "password": password,
+    };
 }
