@@ -33,17 +33,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     if (next is SuccessAuthState) {
       // Navigate to Dashboard or Home page
       Navigator.of(context).pushNamed('/home');
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   const SnackBar(content: Text('Login successful')),
-      // );
-      // Example navigation:
-      // Navigator.of(context).pushReplacementNamed('/home');
     } else if (next is ErrorAuthState) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(next.message),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text(next.message), backgroundColor: Colors.red),
       );
     }
   }
@@ -67,10 +59,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           children: [
             const Text(
               'Welcome Back',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 32),
@@ -131,26 +120,28 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   Widget _buildLoginButton() {
     final state = ref.watch(authProvider);
-    final notifier = ref.read(authProvider.notifier);
-    
+
     return ElevatedButton(
-      onPressed: state is LoadingAuthState 
-        ? null 
-        : () {
-            if (_formKey.currentState!.validate()) {
-              notifier.login();
-            }
-          },
+      onPressed:
+          state is LoadingAuthState
+              ? null
+              : () {
+                if (_formKey.currentState!.validate()) {
+                  final notifier = ref.read(authProvider.notifier);
+                  notifier.login();
+                }
+              },
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 12),
       ),
-      child: state is LoadingAuthState
-        ? const SizedBox(
-            height: 20,
-            width: 20,
-            child: CircularProgressIndicator(strokeWidth: 2),
-          )
-        : const Text('Login', style: TextStyle(fontSize: 16)),
+      child:
+          state is LoadingAuthState
+              ? const SizedBox(
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+              : const Text('Login', style: TextStyle(fontSize: 16)),
     );
   }
 }

@@ -7,7 +7,7 @@ enum SharedPreferencesKeys {
 }
 
 enum EndPoints {
-  login("auth/login");
+  login("auth/admin/login");
 
   final String url;
 
@@ -15,7 +15,7 @@ enum EndPoints {
 }
 
 enum BaseUrls {
-  prodUrl("https://ws-pay-test.devcustomprojects.com/api/"),
+  prodUrl("https://flexdrive-backend-b11-30e7d9c327b8.herokuapp.com/api/v1/"),
   stagUrl(
     "https://f7cf-2407-aa80-14-602-18b1-cfba-db33-268f.ngrok-free.app/api/",
   ),

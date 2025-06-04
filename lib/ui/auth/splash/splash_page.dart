@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:riverpod_template/utils/locator.dart';
@@ -31,6 +32,7 @@ class _SplashPageState extends State<SplashPage> {
         context,
       ).pushReplacementNamed(isLoggedIn ? '/home' : '/login');
     }
+    log('User is logged in: $isLoggedIn');
   }
 
   @override

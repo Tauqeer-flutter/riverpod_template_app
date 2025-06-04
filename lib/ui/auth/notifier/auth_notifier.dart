@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:riverpod_template/exceptions/auth_exception.dart';
 import 'package:riverpod_template/models/response/auth/login_response.dart';
 import 'package:riverpod_template/repositories/auth_repository.dart';
 import 'package:riverpod_template/utils/locator.dart';
@@ -20,7 +21,7 @@ class AuthNotifier extends BaseNotifier<AuthState> {
       final String password = passwordController.text.trim();
 
       if (email.isEmpty || password.isEmpty) {
-        throw Exception('Email and password cannot be empty');
+        throw AuthException(message: 'Email and password cannot be empty');
       }
 
       final LoginResponse response = await locator<AuthRepository>().login(
@@ -28,14 +29,12 @@ class AuthNotifier extends BaseNotifier<AuthState> {
         password: password,
       );
 
-      if (response.status == true) {
+      if (response.status == 'success') {
         // Save token to secure storage
-        if (response.data != null) {
-          await locator<SecureStorage>().saveAuthToken(response.data.token);
-        }
+        await locator<SecureStorage>().saveAuthToken(response.data.token);
         state = SuccessAuthState();
       } else {
-        throw Exception(response.message ?? 'Login failed');
+        throw AuthException(message: response.message);
       }
     });
   }
