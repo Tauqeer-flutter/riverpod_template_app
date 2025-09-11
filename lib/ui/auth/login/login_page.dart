@@ -3,12 +3,12 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../utils/enums.dart';
 import '../notifier/auth_notifier.dart';
 import '../notifier/auth_states.dart';
 
 final authProvider = StateNotifierProvider.autoDispose<AuthNotifier, AuthState>(
   (ref) {
-    log('AUTH NOTIFIER INITIALISED');
     return AuthNotifier();
   },
 );
@@ -44,10 +44,28 @@ class LoginPage extends StatelessWidget {
                 TextFormField(
                   controller: notifier.emailController,
                   decoration: InputDecoration(label: Text('Email')),
+                  validator: (email) {
+                    if (email == null || email.isEmpty) {
+                      return 'Email is required!';
+                    } else if (!RegExp(
+                      RegExpPattern.email.pattern,
+                    ).hasMatch(email)) {
+                      return 'Invalid email!';
+                    }
+                    return null;
+                  },
                 ),
                 TextFormField(
                   controller: notifier.passwordController,
                   decoration: InputDecoration(label: Text('Password')),
+                  validator: (password) {
+                    if (password == null || password.isEmpty) {
+                      return 'Password is required!';
+                    } else if (password.length < 8) {
+                      return 'Password must contains 8 characters';
+                    }
+                    return null;
+                  },
                 ),
                 _buildLoginButton(ref),
               ],
