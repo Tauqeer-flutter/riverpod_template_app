@@ -14,7 +14,6 @@ enum EndPoints {
   const EndPoints(this.url);
 }
 
-<<<<<<< HEAD
 enum RegExpPattern {
   email(
     r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
@@ -27,7 +26,7 @@ enum RegExpPattern {
   final String pattern;
   final String errorMessage;
 }
-=======
+
 enum BaseUrls {
   prodUrl("https://flexdrive-backend-b11-30e7d9c327b8.herokuapp.com/api/v1/"),
   stagUrl(
@@ -43,5 +42,3 @@ enum BaseUrls {
 
   const BaseUrls(this.url);
 }
-
->>>>>>> e6ace91ffa7870c281fa847eb59d8fe871a4be0b

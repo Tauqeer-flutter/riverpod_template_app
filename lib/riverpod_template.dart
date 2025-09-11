@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'routes/app_routes.dart';
@@ -44,12 +45,14 @@ class RiverpodTemplate extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       designSize: _getDesignSize(context),
-      child: MaterialApp(
-        builder: EasyLoading.init(),
-        title: 'Riverpod Template',
-        theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
-        initialRoute: AppRoutes.base,
-        routes: AppRoutes.routes,
+      child: ProviderScope(
+        child: MaterialApp(
+          builder: EasyLoading.init(),
+          title: 'Riverpod Template',
+          theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
+          initialRoute: AppRoutes.base,
+          routes: AppRoutes.routes,
+        ),
       ),
     );
   }
