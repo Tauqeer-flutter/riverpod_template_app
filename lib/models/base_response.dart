@@ -1,15 +1,27 @@
-import 'package:json_annotation/json_annotation.dart';
+class BaseResponseModel {
+   String? status;
+  String? message;
 
-part 'base_response.g.dart';
+  BaseResponseModel({
+    this.status,
+    this.message,
+  });
 
-@JsonSerializable()
-class BaseResponse {
-  final bool? isSuccess;
-  final String? message;
+  factory BaseResponseModel.fromJson(Map<String, dynamic> json) {
+    String? parsedMessage;
 
-  const BaseResponse({this.isSuccess, this.message});
+    // Check the type of 'message'
+    if (json['message'] is String) {
+      parsedMessage = json['message'];
+    } else if (json['message'] is Map<String, dynamic> &&
+        json['message']['error'] is List) {
+      List<dynamic> errors = json['message']['error'];
+      parsedMessage = errors.isNotEmpty ? errors[0] as String : null;
+    }
 
-  factory BaseResponse.fromJson(Map<String, dynamic> json) {
-    return _$BaseResponseFromJson(json);
+    return BaseResponseModel(
+      status: json['status'],
+      message: parsedMessage,
+    );
   }
 }

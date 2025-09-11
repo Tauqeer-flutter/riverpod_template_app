@@ -1,9 +1,6 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../utils/enums.dart';
 import '../notifier/auth_notifier.dart';
 import '../notifier/auth_states.dart';
 
@@ -13,77 +10,135 @@ final authProvider = StateNotifierProvider.autoDispose<AuthNotifier, AuthState>(
   },
 );
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  ConsumerState<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends ConsumerState<LoginPage> {
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    ref.listenManual(authProvider, _listener);
+  }
 
   void _listener(AuthState? prev, AuthState next) {
     if (next is SuccessAuthState) {
-      /// Navigate to Dashboard or Home page.
+      // Navigate to Dashboard or Home page
+      Navigator.of(context).pushNamed('/home');
     } else if (next is ErrorAuthState) {
-      /// Show toast or snack bar to notify user about the error.
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(next.message), backgroundColor: Colors.red),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text('Login')), body: _buildBody());
+    return Scaffold(
+      appBar: AppBar(title: const Text('Login')),
+      body: _buildBody(),
+    );
   }
 
   Widget _buildBody() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 15),
+      padding: const EdgeInsets.all(16.0),
       child: Form(
-        child: Consumer(
-          builder: (context, ref, _) {
-            ref.listen(authProvider, _listener);
-            log('Login Page Consumer');
-            final AuthNotifier notifier = ref.read(authProvider.notifier);
-            return Column(
-              spacing: 10,
-              children: [
-                TextFormField(
-                  controller: notifier.emailController,
-                  decoration: InputDecoration(label: Text('Email')),
-                  validator: (email) {
-                    if (email == null || email.isEmpty) {
-                      return 'Email is required!';
-                    } else if (!RegExp(
-                      RegExpPattern.email.pattern,
-                    ).hasMatch(email)) {
-                      return 'Invalid email!';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  controller: notifier.passwordController,
-                  decoration: InputDecoration(label: Text('Password')),
-                  validator: (password) {
-                    if (password == null || password.isEmpty) {
-                      return 'Password is required!';
-                    } else if (password.length < 8) {
-                      return 'Password must contains 8 characters';
-                    }
-                    return null;
-                  },
-                ),
-                _buildLoginButton(ref),
-              ],
-            );
-          },
+        key: _formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Text(
+              'Welcome Back',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 32),
+            _buildEmailField(),
+            const SizedBox(height: 16),
+            _buildPasswordField(),
+            const SizedBox(height: 24),
+            _buildLoginButton(),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildLoginButton(WidgetRef ref) {
-    final AuthState state = ref.watch(authProvider);
-    if (state is LoadingAuthState) {
-      return CircularProgressIndicator();
-    }
+  Widget _buildEmailField() {
+    final notifier = ref.read(authProvider.notifier);
+    return TextFormField(
+      controller: notifier.emailController,
+      decoration: const InputDecoration(
+        labelText: 'Email',
+        prefixIcon: Icon(Icons.email),
+        border: OutlineInputBorder(),
+      ),
+      keyboardType: TextInputType.emailAddress,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter your email';
+        }
+        if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+          return 'Please enter a valid email';
+        }
+        return null;
+      },
+    );
+  }
+
+  Widget _buildPasswordField() {
+    final notifier = ref.read(authProvider.notifier);
+    return TextFormField(
+      controller: notifier.passwordController,
+      decoration: const InputDecoration(
+        labelText: 'Password',
+        prefixIcon: Icon(Icons.lock),
+        border: OutlineInputBorder(),
+      ),
+      obscureText: true,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter your password';
+        }
+        if (value.length < 6) {
+          return 'Password must be at least 6 characters';
+        }
+        return null;
+      },
+    );
+  }
+
+  Widget _buildLoginButton() {
+    final state = ref.watch(authProvider);
+
     return ElevatedButton(
-      onPressed: ref.read(authProvider.notifier).login,
-      child: Text('Login'),
+      onPressed:
+          state is LoadingAuthState
+              ? null
+              : () {
+                if (_formKey.currentState!.validate()) {
+                  final notifier = ref.read(authProvider.notifier);
+                  notifier.login();
+                }
+              },
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+      ),
+      child:
+          state is LoadingAuthState
+              ? const SizedBox(
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+              : const Text('Login', style: TextStyle(fontSize: 16)),
     );
   }
 }

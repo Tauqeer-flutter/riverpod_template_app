@@ -45,9 +45,11 @@ class RiverpodTemplate extends StatelessWidget {
     return ScreenUtilInit(
       designSize: _getDesignSize(context),
       child: MaterialApp(
-        routes: AppRoutes.routes,
         builder: EasyLoading.init(),
         title: 'Riverpod Template',
+        theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
+        initialRoute: AppRoutes.base,
+        routes: AppRoutes.routes,
       ),
     );
   }
