@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_template/utils/extensions.dart';
+import 'package:riverpod_template/widgets/language_button.dart';
 
 import '../notifier/auth_notifier.dart';
 import '../notifier/auth_states.dart';
@@ -40,7 +42,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
+      appBar: AppBar(
+        title: Text(context.localization.login),
+        actions: [LanguageButton()],
+      ),
       body: _buildBody(),
     );
   }
@@ -54,8 +59,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text(
-              'Welcome Back',
+            Text(
+              context.localization.welcomeBack,
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
@@ -83,10 +88,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       keyboardType: TextInputType.emailAddress,
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Please enter your email';
+          return context.localization.pleaseEnterYourEmail;
         }
         if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-          return 'Please enter a valid email';
+          return context.localization.pleaseEnterValidEmail;
         }
         return null;
       },
@@ -97,18 +102,18 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final notifier = ref.read(authProvider.notifier);
     return TextFormField(
       controller: notifier.passwordController,
-      decoration: const InputDecoration(
-        labelText: 'Password',
+      decoration: InputDecoration(
+        labelText: context.localization.password,
         prefixIcon: Icon(Icons.lock),
         border: OutlineInputBorder(),
       ),
       obscureText: true,
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Please enter your password';
+          return context.localization.pleaseEnterYourPassword;
         }
         if (value.length < 6) {
-          return 'Password must be at least 6 characters';
+          return context.localization.passwordMustBeAtLeastCharacters;
         }
         return null;
       },
@@ -138,7 +143,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 width: 20,
                 child: CircularProgressIndicator(strokeWidth: 2),
               )
-              : const Text('Login', style: TextStyle(fontSize: 16)),
+              : Text(
+                context.localization.login,
+                style: TextStyle(fontSize: 16),
+              ),
     );
   }
 }
