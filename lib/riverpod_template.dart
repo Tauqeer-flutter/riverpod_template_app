@@ -3,9 +3,15 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'l10n/app_localizations.dart';
+import 'notifiers/language_notifier.dart';
 import 'routes/app_routes.dart';
 
-class RiverpodTemplate extends StatelessWidget {
+final languageProvider = NotifierProvider(() {
+  return LanguageNotifier();
+});
+
+class RiverpodTemplate extends ConsumerWidget {
   RiverpodTemplate({super.key}) {
     configEasyLoading();
   }
@@ -42,17 +48,20 @@ class RiverpodTemplate extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentLocale = ref.watch(languageProvider);
     return ScreenUtilInit(
       designSize: _getDesignSize(context),
-      child: ProviderScope(
-        child: MaterialApp(
-          builder: EasyLoading.init(),
-          title: 'Riverpod Template',
-          theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
-          initialRoute: AppRoutes.base,
-          routes: AppRoutes.routes,
-        ),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        builder: EasyLoading.init(),
+        title: 'Riverpod Template',
+        theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
+        initialRoute: AppRoutes.base,
+        routes: AppRoutes.routes,
+        locale: currentLocale,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
       ),
     );
   }

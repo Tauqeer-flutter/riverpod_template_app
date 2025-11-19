@@ -1,0 +1,10 @@
+{
+    "welcomeBack": "Bon retour",
+    "email": "Email",
+    "pleaseEnterYourEmail": "Veuillez entrer votre email",
+    "pleaseEnterValidEmail": "Veuillez entrer un email valide",
+    "password": "Mot de passe",
+    "pleaseEnterYourPassword": "Veuillez entrer votre mot de passe",
+    "passwordMustBeAtLeastCharacters": "Le mot de passe doit contenir au moins 6 caractères",
+    "login": "Se connecter"
+}
