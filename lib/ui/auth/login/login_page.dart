@@ -4,11 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../notifier/auth_notifier.dart';
 import '../notifier/auth_states.dart';
 
-final authProvider = StateNotifierProvider.autoDispose<AuthNotifier, AuthState>(
-  (ref) {
-    return AuthNotifier();
-  },
-);
+final authProvider = NotifierProvider.autoDispose<AuthNotifier, AuthState>(() {
+  return AuthNotifier();
+});
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});

@@ -2,10 +2,20 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_template/exceptions/auth_exception.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
-abstract class BaseNotifier<T> extends StateNotifier<T> {
-  BaseNotifier(super.state);
+import '../exceptions/auth_exception.dart';
+
+abstract class BaseNotifier<T> extends Notifier<T> {
+  final T initialState;
+
+  BaseNotifier(this.initialState);
+
+  @override
+  T build() {
+    ref.onDispose(dispose);
+    return initialState;
+  }
 
   Future<U?> performSafeAction<U>(AsyncValueGetter<U> callback) async {
     try {
@@ -21,7 +31,13 @@ abstract class BaseNotifier<T> extends StateNotifier<T> {
     }
   }
 
+  @mustCallSuper
+  void onReceivingError(String message) {
+    Fluttertoast.showToast(msg: message);
+  }
 
-  void onReceivingError(String message);
-
+  @mustCallSuper
+  void dispose() {
+    log('DISPOSING $runtimeType', name: 'RIVERPOD');
+  }
 }
