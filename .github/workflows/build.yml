@@ -20,8 +20,6 @@ jobs:
       # The analysis requires to retrieve dependencies and build successfully
       - name: Pub Get
         run: flutter pub get
-      - name: Build
-        run: flutter build apk
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v6
         env:
